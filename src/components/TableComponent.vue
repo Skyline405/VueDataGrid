@@ -1,42 +1,30 @@
 <template>
-  <div class="grid-wrapper">
+  <div class="grid">
+		<div class="grid-wrapper">
 
-		<div class="grid-column-resize-pointer"
-			:style="{ display: resizePointerVisible ? 'block' : 'none', left: resizePointerLeft + 'px' }"
-		></div>
-		<!-- <div class="grid-column-resize-pointer"></div> -->
+			<div class="grid-column-resize-pointer"
+				:style="{ display: resizePointerVisible ? 'block' : 'none', left: resizePointerLeft + 'px' }"
+			></div>
 
-		<table class="grid-layout-table"
-			cellpadding="0" cellspacing="0" border="0"
-		>
-			<tbody>
-				<tr v-if="showHeader">
-					<td style="height: 1px;">
-						<table-head
-							:columns="columns"
-							:columnSizeMap="columnSizeMap"
-							:scrollLeft="scrollLeft"
-							@columnResize:start="onColumnResizeStart"
-							@columnResize:move="onColumnResizeMove"
-							@columnResize:end="onColumnResizeEnd"
-						/>
-					</td>
-				</tr>
-				<tr>
-					<td>
-						<table-body
-							:columns="columns"
-							:columnSizeMap="columnSizeMap"
-							:data="data"
-							:loading="loading"
-							:scrollLeft.sync="scrollLeft"
-							@bodyWidthChanged="onBodyWidthChanged"
-						/>
-					</td>
-				</tr>
-			</tbody>
-		</table>
+			<table-head
+				:columns="columns"
+				:columnSizeMap="columnSizeMap"
+				:scrollLeft="scrollLeft"
+				@columnResize:start="onColumnResizeStart"
+				@columnResize:move="onColumnResizeMove"
+				@columnResize:end="onColumnResizeEnd"
+			/>
 
+			<table-body
+				:columns="columns"
+				:columnSizeMap="columnSizeMap"
+				:data="data"
+				:loading="loading"
+				:scrollLeft.sync="scrollLeft"
+				@bodyWidthChanged="onBodyWidthChanged"
+			/>
+
+		</div>
   </div>
 </template>
 
@@ -100,9 +88,6 @@ export default {
 			}
 		}
 	},
-	computed: {
-
-	},
 	methods: {
 		getColumnWidth(column) {
 			return Math.max(column.width, column.minWidth)
@@ -154,11 +139,17 @@ export default {
 	$border: 1px solid lightgray;
 
 	.grid {
+		overflow: hidden;
+		height: 100%;
+
 		&-wrapper {
+			display: flex;
+			flex-direction: column;
 			position: relative;
 			box-sizing: border-box;
 			border: $border;
 			overflow: hidden;
+			height: 100%;
 		}
 
 		&-layout-table {
@@ -176,10 +167,6 @@ export default {
 			box-sizing: border-box;
 			empty-cells: show;
 			overflow: hidden;
-
-			&-content {
-
-			}
 		}
 
 		&-column-resize-pointer {

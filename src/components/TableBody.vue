@@ -53,10 +53,6 @@ export default {
 			type: Number,
 			default: 0
 		},
-		scrollWidth: {
-			type: Number,
-			default: 0
-		}
 	},
 	data: () => ({
 		scrollHeight: 0,

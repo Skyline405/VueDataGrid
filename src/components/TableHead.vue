@@ -66,7 +66,6 @@ export default {
 	methods: {
 		onMouseDown(e, column) {
 			const startX = e.clientX
-			console.log('mousedown', startX)
 			this.$emit('columnResize:start', this.calcRelativePosition(startX))
 
 			const onMouseMove = e => {
@@ -79,8 +78,6 @@ export default {
 			const onMouseUp = e => {
 				const endX = e.clientX
 				const delta = endX - startX
-
-				console.log('mouseup', delta)
 
 				this.$emit('columnResize:end', {
 					column,
@@ -131,12 +128,10 @@ export default {
 
 	.resize-handler {
 		position: absolute;
-		//background: black;
 		width: 5px;
 		height: 100%;
 		top: 0;
 		right: 0;
-		opacity: 0.5;
 		cursor: col-resize;
 	}
 </style>

@@ -1,17 +1,9 @@
 <template>
-	<div>
+	<div style="height: 98vh">
 		<table-component
 			:dataSource="dataSource"
 			:layout="layout"
-			style="width: 50%; height: 700px"
 		></table-component>
-
-		<div style="padding: 50px 0">
-			Schema:
-			<span v-for="col in layout" :key="col.id" style="border: 1px solid lightgray; padding: 15px;">
-				{{ col.width || 'auto' }}
-			</span>
-		</div>
 
 	</div>
 </template>
@@ -37,7 +29,8 @@ export default {
 				formatter: (data, col) => `${data.age} <span style="color: gray">years old</span>`
 			},
 			{
-				id: 'active', name: 'Active'
+				id: 'active', name: 'Active',
+				formatter: (data) => `<input type="checkbox" checked="${data.active + ''}" /> ${data.active}` // TODO
 			},
 			{
 				id: 'admin', name: 'Admin', width: 70,
@@ -57,7 +50,7 @@ export default {
 <style lang="scss">
 	body {
 		height: 2000px;
-		padding-left: 200px;
+		// padding-left: 200px;
 	}
 
 </style>
