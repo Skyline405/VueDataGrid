@@ -1,28 +1,63 @@
 <template>
-  <div id="app">
-    <img alt="Vue logo" src="./assets/logo.png">
-    <HelloWorld msg="Welcome to Your Vue.js App"/>
-  </div>
+	<div>
+		<table-component
+			:dataSource="dataSource"
+			:layout="layout"
+			style="width: 50%; height: 700px"
+		></table-component>
+
+		<div style="padding: 50px 0">
+			Schema:
+			<span v-for="col in layout" :key="col.id" style="border: 1px solid lightgray; padding: 15px;">
+				{{ col.width || 'auto' }}
+			</span>
+		</div>
+
+	</div>
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld.vue'
+import TableComponent from './components/TableComponent'
+
+import DataSource from './DataSource'
 
 export default {
   name: 'app',
   components: {
-    HelloWorld
-  }
+    TableComponent,
+  },
+  data: () => ({
+		layout: [
+			{ id: 'id', name: '#', width: 50 },
+			{
+				id: 'name', name: 'Name', //width: 200
+			},
+			{
+				id: 'age', name: 'Age', width: 100,
+				formatter: (data, col) => `${data.age} <span style="color: gray">years old</span>`
+			},
+			{
+				id: 'active', name: 'Active'
+			},
+			{
+				id: 'admin', name: 'Admin', width: 70,
+			},
+		],
+    // data: [
+    //   { id: 0, name: 'Вася', age: 30 },
+    //   { id: 1, name: 'Петя', age: 32 },
+    //   { id: 2, name: 'Михаил', age: 45 },
+    //   { id: 3, name: 'Аркадий', age: 25 },
+    // ],
+    dataSource: new DataSource({ delay: 0 })
+  })
 }
 </script>
 
 <style lang="scss">
-#app {
-  font-family: 'Avenir', Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
-}
+	body {
+		height: 2000px;
+		padding-left: 200px;
+	}
+
 </style>
