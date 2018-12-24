@@ -70,7 +70,14 @@ export default {
 
 			const onMouseMove = e => {
 				const posX = e.clientX
-				const relativeX = this.calcRelativePosition(posX);
+				const relativeX = this.calcRelativePosition(posX)
+
+				const delta = posX - startX
+				const width = this.columnSizeMap[column.id] + delta
+
+				if (width < column.minWidth) {
+					relativeX = startX - this.columnSizeMap[column.id] + column.minWidth
+				}
 
 				this.$emit('columnResize:move', relativeX)
 			}
@@ -81,7 +88,7 @@ export default {
 
 				this.$emit('columnResize:end', {
 					column,
-					width: this.columnSizeMap[column.id] + delta
+					width: Math.max(this.columnSizeMap[column.id] + delta, column.minWidth)
 				})
 
 				document.removeEventListener('mousemove', onMouseMove)
@@ -106,6 +113,7 @@ export default {
 
 <style lang="scss" scoped>
 	.grid-header-wrapper {
+		z-index: 10;
 		padding-right: 15px;
 		background: #f0f0f0;
 		border-bottom: 1px solid lightgray;

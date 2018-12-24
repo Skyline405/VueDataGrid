@@ -22,14 +22,14 @@ export default {
 		layout: [
 			{ id: 'id', name: '#', width: 50 },
 			{
-				id: 'name', name: 'Name', //width: 200
+				id: 'name', name: 'Name', width: 500
 			},
 			{
 				id: 'age', name: 'Age', width: 100,
 				formatter: (data, col) => `${data.age} <span style="color: gray">years old</span>`
 			},
 			{
-				id: 'active', name: 'Active',
+				id: 'active', name: 'Active', width: 200,
 				formatter: (data) => `<input type="checkbox" checked="${data.active + ''}" /> ${data.active}` // TODO
 			},
 			{

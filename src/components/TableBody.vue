@@ -108,7 +108,7 @@ export default {
 
 	.grid-row {
 		&.hover:hover {
-		background: #fbfbfb;
+		background: #f7f7f7;
 	}
 	}
 </style>
