@@ -2,9 +2,7 @@
   <div class="grid">
 		<div class="grid-wrapper">
 
-			<div class="grid-column-resize-pointer"
-				:style="{ display: resizePointerVisible ? 'block' : 'none', left: resizePointerLeft + 'px' }"
-			></div>
+			<table-resize-pointer v-model="resizePointerModel" />
 
 			<table-head
 				:columns="columns"
@@ -20,8 +18,8 @@
 				:columnSizeMap="columnSizeMap"
 				:data="data"
 				:loading="loading"
-				:scrollLeft.sync="scrollLeft"
 				@bodyWidthChanged="onBodyWidthChanged"
+				@scrollLeft="updateScrollLeft"
 			/>
 
 		</div>
@@ -31,6 +29,8 @@
 <script>
 import TableHead from './TableHead'
 import TableBody from './TableBody'
+import TableResizePointer from './TableResizePointer'
+
 import _ from 'lodash'
 
 const defaultColumnParams = {
@@ -46,6 +46,7 @@ export default {
 	components: {
 		TableHead,
 		TableBody,
+		TableResizePointer,
 	},
 	props: {
 		layout: Array,
@@ -60,8 +61,10 @@ export default {
 		columns: [],
 		columnSizeMap: {},
 		loading: false,
-		resizePointerLeft: 0,
-		resizePointerVisible: false,
+		resizePointerModel: {
+			left: 0,
+			visible: false,
+		},
 		scrollLeft: 0,
 	}),
 	async mounted() {
@@ -113,24 +116,33 @@ export default {
 				newColSizeMap[column.id] = Math.max(widthPerCol, column.minWidth)
 			})
 
-			console.log('onBodyWidthChange', _.map(this.columns, c => c.width))
-
 			this.columnSizeMap = newColSizeMap
 		},
 		onColumnResizeStart(posX) {
-			this.resizePointerLeft = posX
-			this.resizePointerVisible = true
+			this.resizePointerModel = {
+				left: posX,
+				visible: true
+			}
 		},
 		onColumnResizeMove(posX) {
-			this.resizePointerLeft = posX
+			this.resizePointerModel = {
+				...this.resizePointerModel,
+				left: posX
+			}
 		},
 		onColumnResizeEnd({ column, width }) {
-			this.resizePointerVisible = false
+			this.resizePointerModel = {
+				...this.resizePointerModel,
+				visible: false
+			}
 			this.columnSizeMap = {
 				...this.columnSizeMap,
 				[column.id]: width
 			}
 		},
+		updateScrollLeft(scrollLeft) {
+			this.scrollLeft = scrollLeft
+		}
 	}
 }
 </script>

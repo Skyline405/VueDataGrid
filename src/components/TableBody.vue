@@ -1,5 +1,5 @@
 <template>
-	<div class="grid-body-wrapper" ref="wrapperNode" @scroll.stop="onScroll">
+	<div class="grid-body-wrapper" ref="wrapperNode" @scroll.passive="onScroll">
 
 		<div class="grid-body" ref="bodyNode">
 			<!-- <div class="vertical-vscroll" :style="{ height: `${scrollHeight}px` }"></div> -->
@@ -49,14 +49,12 @@ export default {
 		},
 		data: Array,
 		loading: false,
-		scrollLeft: {
-			type: Number,
-			default: 0
-		},
 	},
 	data: () => ({
 		scrollHeight: 0,
 		lastBodyWidth: 0,
+		lastScrollLeft: 0,
+		isScrollAtBottom: false,
 	}),
 	updated() {
 		if (this.lastBodyWidth !== this.bodyWidth) {
@@ -67,7 +65,7 @@ export default {
 	computed: {
 		bodyWidth() {
 			return this.$refs.bodyNode.offsetWidth
-		},
+		}
 	},
 	methods: {
 		getColumnWidth(column) {
@@ -77,7 +75,22 @@ export default {
 			)
 		},
 		onScroll(e) {
-			this.$emit('update:scrollLeft', this.$refs.wrapperNode.scrollLeft);
+			const scrollLeft = this.$refs.wrapperNode.scrollLeft
+
+			if (scrollLeft !== this.lastScrollLeft) {
+				this.$emit('scrollLeft', scrollLeft)
+				this.lastScrollLeft = scrollLeft
+			}
+
+			const scrollTop = this.$refs.wrapperNode.scrollTop
+			const scrollHeight = this.$refs.wrapperNode.scrollHeight
+			const bodyHeight = this.$refs.bodyNode.offsetHeight
+
+			const scrollBottom = scrollTop + bodyHeight
+			if (!this.isScrollAtBottom && scrollBottom >= scrollHeight) {
+				console.log('At bottom');
+				this.isScrollAtBottom = true
+			}
 		}
 	}
 }

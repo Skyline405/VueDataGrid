@@ -21,7 +21,7 @@
 						>
 							<span class="grid-cell-content">{{ column.name }}</span>
 							<span class="resize-handler"
-								@mousedown.prevent="onMouseDown($event, column)"
+								@mousedown.prevent.left="onMouseDown($event, column)"
 							></span>
 						</th>
 					</tr>
@@ -65,16 +65,22 @@ export default {
 	},
 	methods: {
 		onMouseDown(e, column) {
+			e.preventDefault()
+
 			const startX = e.clientX
 			this.$emit('columnResize:start', this.calcRelativePosition(startX))
 
 			const onMouseMove = e => {
+				e.preventDefault()
+				e.stopPropagation()
+
 				const posX = e.clientX
 				const relativeX = this.calcRelativePosition(posX)
 
 				const delta = posX - startX
 				const width = this.columnSizeMap[column.id] + delta
 
+				// FIXME: find better way
 				if (width < column.minWidth) {
 					relativeX = startX - this.columnSizeMap[column.id] + column.minWidth
 				}
@@ -83,6 +89,8 @@ export default {
 			}
 
 			const onMouseUp = e => {
+				e.preventDefault()
+
 				const endX = e.clientX
 				const delta = endX - startX
 

@@ -1,5 +1,5 @@
 <template>
-	<div style="height: 98vh">
+	<div style="height: 80vh; width: 80vw; resize: both; overflow: hidden; padding: 10px; border: 1px solid gray;">
 		<table-component
 			:dataSource="dataSource"
 			:layout="layout"
@@ -22,26 +22,20 @@ export default {
 		layout: [
 			{ id: 'id', name: '#', width: 50 },
 			{
-				id: 'name', name: 'Name', width: 500
+				id: 'name', name: 'Name', width: 1000, minWidth: 250
 			},
 			{
-				id: 'age', name: 'Age', width: 100,
+				id: 'age', name: 'Age', width: 700,
 				formatter: (data, col) => `${data.age} <span style="color: gray">years old</span>`
 			},
 			{
-				id: 'active', name: 'Active', width: 200,
+				id: 'active', name: 'Active', width: 300,
 				formatter: (data) => `<input type="checkbox" checked="${data.active + ''}" /> ${data.active}` // TODO
 			},
 			{
-				id: 'admin', name: 'Admin', width: 70,
+				id: 'admin', name: 'Admin', width: 700,
 			},
 		],
-    // data: [
-    //   { id: 0, name: 'Вася', age: 30 },
-    //   { id: 1, name: 'Петя', age: 32 },
-    //   { id: 2, name: 'Михаил', age: 45 },
-    //   { id: 3, name: 'Аркадий', age: 25 },
-    // ],
     dataSource: new DataSource({ delay: 0 })
   })
 }
@@ -50,7 +44,6 @@ export default {
 <style lang="scss">
 	body {
 		height: 2000px;
-		// padding-left: 200px;
 	}
 
 </style>
