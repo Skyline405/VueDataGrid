@@ -1,9 +1,13 @@
 function* createUsers (from, count) {
 	let id = from | 0
-	let i = 0;
+	let i = 0
+
 	const names = [
 		'Петр', 'Василий', 'Глеб', 'Павел', 'Алексей', 'Владимир', 'Александр', 'Вячеслав'
-	];
+	]
+
+	const companies = 'Navitel,Google,Amazone,Facebook,Tweeter,Microsoft,2Gis,Tesla,Space X,Frontire Developers'.split(',')
+
   while (i < count) {
 		yield {
 			id: id++,
@@ -11,6 +15,7 @@ function* createUsers (from, count) {
 			age: Math.random() * 100 | 0,
 			active: Boolean(Math.round(Math.random())),
 			admin: Boolean(Math.round(Math.random())),
+			company: `${companies[id % companies.length]}`,
 		}
 		i++
 	}
