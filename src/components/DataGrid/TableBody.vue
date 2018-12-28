@@ -1,43 +1,3 @@
-<template>
-	<div class="grid-body-wrapper" ref="wrapperNode" @scroll.passive="onScroll">
-
-		<div class="grid-body" ref="bodyNode">
-
-			<template v-if="data.length > 0">
-				<table class="grid-body-table"
-					cellpadding="0" cellspacing="0" border="0"
-				>
-					<colgroup>
-						<col
-							v-for="(column, i) in columns"
-							:key="i"
-							:name="column.id"
-							:width="getColumnWidth(column)"
-						/>
-					</colgroup>
-					<tbody>
-						<tr class="grid-row hover"
-							v-for="row in data"
-							:key="row.id"
-						>
-							<td class="grid-cell"
-								v-for="(column, i) in columns"
-								:key="i"
-							>
-								<span class="grid-cell-content"
-									v-html="column.formatter(row, column)"
-								></span>
-							</td>
-						</tr>
-					</tbody>
-				</table>
-			</template>
-
-		</div>
-
-	</div>
-</template>
-
 <script>
 export default {
 	name: 'TableBody',
@@ -47,7 +7,10 @@ export default {
 			type: Object,
 			default: {}
 		},
-		data: Array,
+		data: {
+			type: Array,
+			default: []
+		},
 		loading: false,
 	},
 	data: () => ({
@@ -56,6 +19,9 @@ export default {
 		lastScrollLeft: 0,
 		isScrollAtBottom: false,
 	}),
+	created() {
+		console.log('Body columns: ', this.columns);
+	},
 	async mounted() {
 		await this.$nextTick()
 		this.checkBodyWidth()
@@ -88,17 +54,49 @@ export default {
 				this.$emit('scrollLeft', scrollLeft)
 				this.lastScrollLeft = scrollLeft
 			}
-
-			// const scrollTop = this.$refs.wrapperNode.scrollTop
-			// const scrollHeight = this.$refs.wrapperNode.scrollHeight
-			// const bodyHeight = this.$refs.bodyNode.offsetHeight
-
-			// const scrollBottom = scrollTop + bodyHeight
-			// if (scrollBottom >= scrollHeight) {
-			// 	console.log('At bottom')
-			// 	this.$emit('reachBottom')
-			// }
 		}
+	},
+	render(h) {
+		return <div class="grid-body-wrapper" ref="wrapperNode" {...{ on: { '&scroll': this.onScroll } }}>
+			<div class="grid-body" ref="bodyNode">
+				{
+					this.data.length > 0 &&
+					<table class="grid-body-table"
+						cellpadding="0" cellspacing="0" border="0"
+					>
+						<colgroup>
+							{
+								this.columns.map((column, i) => (
+									<col key={i}
+										name={column.id}
+										width={this.getColumnWidth(column)}
+									/>
+								))
+							}
+						</colgroup>
+						<tbody>
+							{
+								this.data.map((item, rowIndex) => (
+									<tr class="grid-row hover" key={item.id}>
+										{
+											this.columns.map((column, colIndex) => (
+												<td class="grid-cell" key={colIndex}>
+													{
+														column.formatter &&
+														column.formatter(h, { item, column, rowIndex })
+													}
+												</td>
+											))
+										}
+									</tr>
+								))
+							}
+						</tbody>
+					</table>
+				}
+
+			</div>
+		</div>
 	}
 }
 </script>

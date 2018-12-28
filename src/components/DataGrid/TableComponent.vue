@@ -35,11 +35,14 @@ import TableResizePointer from './TableResizePointer'
 import _ from 'lodash'
 
 const defaultColumnParams = {
+	id: null,
 	sortable: false,
-	formatter(rowData, col) {
-		return rowData[col.id]
-	},
-	minWidth: 30
+	resizable: true,
+	width: null,
+	minWidth: 30,
+	formatter(h, { item, column, index }) {
+		return `${item[column.id]}`
+	}
 }
 
 export default {
@@ -70,9 +73,7 @@ export default {
 	}),
 	created() {
 		this.fetchData()
-	},
-	async mounted() {
-
+		console.log(this.$slots, this.$scopedSlots)
 	},
 	watch: {
 		layout: {
