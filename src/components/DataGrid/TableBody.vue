@@ -19,9 +19,6 @@ export default {
 		lastScrollLeft: 0,
 		isScrollAtBottom: false,
 	}),
-	created() {
-		console.log('Body columns: ', this.columns);
-	},
 	async mounted() {
 		await this.$nextTick()
 		this.checkBodyWidth()
@@ -79,14 +76,15 @@ export default {
 								this.data.map((item, rowIndex) => (
 									<tr class="grid-row hover" key={item.id}>
 										{
-											this.columns.map((column, colIndex) => (
-												<td class="grid-cell" key={colIndex}>
+											this.columns.map((column, colIndex) => {
+												const context = { item, column, rowIndex }
+												return <td class="grid-cell" key={colIndex} style={column.style(context)}>
 													{
 														column.formatter &&
-														column.formatter(h, { item, column, rowIndex })
+														column.formatter(h, context)
 													}
 												</td>
-											))
+											})
 										}
 									</tr>
 								))

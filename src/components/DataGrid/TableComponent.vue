@@ -42,7 +42,8 @@ const defaultColumnParams = {
 	minWidth: 30,
 	formatter(h, { item, column, index }) {
 		return `${item[column.id]}`
-	}
+	},
+	style: () => null
 }
 
 export default {
@@ -73,7 +74,6 @@ export default {
 	}),
 	created() {
 		this.fetchData()
-		console.log(this.$slots, this.$scopedSlots)
 	},
 	watch: {
 		layout: {
@@ -105,8 +105,8 @@ export default {
 		getColumnWidth(column) {
 			return Math.max.call(null,
 				this.columnSizeMap[column.id] || 0,
-				column.minWidth,
-				column.width,
+				column.minWidth, // must always be defined
+				column.width | 0,
 			)
 		},
 		onBodyWidthChanged(fullWidth) {

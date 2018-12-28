@@ -44,6 +44,9 @@ export default {
 			{
 				id: 'age', name: 'Age', width: 200,
 				formatter: (h, { item, column, style }) => [item.age, ' ', <span style="color: gray">years old</span>],
+				style: ({ item }) => ({
+					color: item.age > 50 ? 'red' : 'green'
+				})
 			},
 			{
 				id: 'active', name: 'Active', width: 100,
