@@ -19,12 +19,22 @@ export default {
 		lastScrollLeft: 0,
 		isScrollAtBottom: false,
 	}),
+	created() {
+		// no reactive
+		this.nativeEventMap = {
+			'scroll': this.onScroll.bind(this)
+		}
+	},
 	async mounted() {
 		await this.$nextTick()
 		this.checkBodyWidth()
+		this.$refs.wrapperNode.addEventListener('scroll', this.nativeEventMap.scroll)
 	},
 	updated() {
 		this.checkBodyWidth()
+	},
+	beforeDestroy() {
+		this.$refs.wrapperNode.removeEventListener('scroll', this.nativeEventMap.scroll)
 	},
 	computed: {
 		bodyWidth() {
@@ -54,7 +64,7 @@ export default {
 		}
 	},
 	render(h) {
-		return <div class="grid-body-wrapper" ref="wrapperNode" {...{ on: { '&scroll': this.onScroll } }}>
+		return <div class="grid-body-wrapper" ref="wrapperNode">
 			<div class="grid-body" ref="bodyNode">
 				{
 					this.data.length > 0 &&

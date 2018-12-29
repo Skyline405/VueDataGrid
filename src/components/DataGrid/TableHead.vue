@@ -21,7 +21,7 @@
 							ref="columnNode"
 						><!-- ex: ref="th_0" -->
 							<span class="grid-cell-content">{{ column.name }}</span>
-							<span class="resize-handler"
+							<span v-if="column.resizable" class="resize-handler"
 								@mousedown.prevent.left="onMouseDown($event, column, $refs.columnNode[i])"
 							></span>
 						</th>

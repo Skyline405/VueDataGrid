@@ -9,6 +9,9 @@
 		<div>
 			Selection: {{ selectdIdList }}
 		</div>
+		<div>
+			<button @click="appendColumn">Append column</button>
+		</div>
 	</div>
 </template>
 
@@ -30,7 +33,7 @@ export default {
 		selectdIdList: [1],
 		layout: [
 			{
-				id: 'id', name: '#', width: 50,
+				id: 'id', name: '#', width: 50, resizable: false,
 				formatter: (h, { item }) => (
 					<input type="checkbox"
 						checked={vm.selectdIdList.indexOf(item.id) > -1}
@@ -40,6 +43,7 @@ export default {
 			},
 			{
 				id: 'name', name: 'Name', width: 100, minWidth: 250, sortable: true,
+				style: ({ item }) => ({ backgroundColor: item.active ? 'lightgreen' : 'coral' })
 			},
 			{
 				id: 'age', name: 'Age', width: 200,
@@ -54,6 +58,7 @@ export default {
 			},
 			{
 				id: 'company', name: 'Company', width: 250,
+				style: ({ item }) => ({ backgroundColor: item.company === 'Navitel' ? 'lightgreen' : '' })
 			},
 			{
 				id: 'admin', name: 'Admin', width: 70,
@@ -63,6 +68,10 @@ export default {
     dataSource: new DataSource({ delay: 0 })
 	}),
 	methods: {
+		appendColumn() {
+			const index = _.random(1, 5)
+			this.layout.push(_.assign({}, this.layout[index]))
+		},
 		setSelected(item) {
 			const index = this.selectdIdList.indexOf(item.id)
 			if (index > -1) {
