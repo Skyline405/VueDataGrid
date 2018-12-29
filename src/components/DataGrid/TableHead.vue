@@ -1,37 +1,4 @@
-<template>
-	<div class="grid-header-wrapper">
-		<div class="grid-header" ref="scrollNode">
 
-			<table class="grid-header-table" ref="tableNode"
-				cellpadding="0" cellspacing="0" border="0"
-			>
-				<colgroup>
-					<col
-						v-for="(column, i) in columns"
-						:key="i"
-						:name="column.id"
-						:width="getColumnWidth(column)"
-					/>
-				</colgroup>
-				<thead>
-					<tr>
-						<th class="grid-cell"
-							v-for="(column, i) in columns"
-							:key="i"
-							ref="columnNode"
-						><!-- ex: ref="th_0" -->
-							<span class="grid-cell-content">{{ column.name }}</span>
-							<span v-if="column.resizable" class="resize-handler"
-								@mousedown.prevent.left="onMouseDown($event, column, $refs.columnNode[i])"
-							></span>
-						</th>
-					</tr>
-				</thead>
-			</table>
-
-		</div>
-	</div>
-</template>
 
 <script>
 import _ from 'lodash'
@@ -67,6 +34,8 @@ export default {
 	methods: {
 		onMouseDown(e, column, node) {
 			e.preventDefault()
+
+			if (e.button !== 0) return
 
 			let startX = e.clientX
 			const columnX = node.getBoundingClientRect().x
@@ -109,7 +78,53 @@ export default {
 				this.columnSizeMap[column.id] || 0,
 				column.minWidth
 			)
+		},
+		nameFunction(h, value) {
+			if (_.isFunction(value)) {
+				return value(h)
+			}
+			return value
 		}
+	},
+	render(h) {
+		return <div class="grid-header-wrapper">
+			<div class="grid-header" ref="scrollNode">
+
+				<table class="grid-header-table" ref="tableNode"
+					cellpadding="0" cellspacing="0" border="0"
+				>
+					<colgroup>
+						{
+							this.columns.map((column, i) => (
+								<col key={ i } name={ column.id }
+									width={ this.getColumnWidth(column) }
+								/>
+							))
+						}
+					</colgroup>
+					<thead>
+						<tr>
+							{
+								this.columns.map((column, i) => (
+									<td class="grid-cell" key={ i } ref={ `td_${i}` }>
+										<span class="grid-cell-content">
+											{ this.nameFunction(h, column.name) }
+										</span>
+										{
+											column.resizable &&
+											<span class="resize-handler"
+												onMousedown={ (e) => this.onMouseDown(e, column, this.$refs[`td_${i}`]) }
+											></span>
+										}
+									</td>
+								))
+							}
+						</tr>
+					</thead>
+				</table>
+
+			</div>
+		</div>
 	}
 }
 </script>

@@ -42,7 +42,8 @@ export default {
 				)
 			},
 			{
-				id: 'name', name: 'Name', width: 100, minWidth: 250, sortable: true,
+				id: 'name', name: (h) => <b>Name</b>,
+				width: 100, minWidth: 250, sortable: true,
 				style: ({ item }) => ({ backgroundColor: item.active ? 'lightgreen' : 'coral' })
 			},
 			{
@@ -58,7 +59,11 @@ export default {
 			},
 			{
 				id: 'company', name: 'Company', width: 250,
-				style: ({ item }) => ({ backgroundColor: item.company === 'Navitel' ? 'lightgreen' : '' })
+				style: ({ item }) => item.company === 'Navitel' ? ({
+					color: 'green',
+					fontStyle: 'italic',
+					fontWeight: 'bold',
+				}) : null
 			},
 			{
 				id: 'admin', name: 'Admin', width: 70,
